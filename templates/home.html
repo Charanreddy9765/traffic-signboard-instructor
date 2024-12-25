@@ -1,0 +1,292 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Signboard Instructor</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: "Roboto", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #e0e5ec);
+            color: #333;
+            transition: background 0.3s ease;
+        }
+
+        /* Title Bar Styles */
+        .title-bar {
+            background: linear-gradient(45deg, #3498db, #1abc9c);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: #16a085;
+            transform: scale(1.05);
+        }
+
+        .theme-toggle {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: #f7f7f7;
+            transform: scale(1.05);
+        }
+
+        /* Light Theme */
+        .light-theme {
+            --bg-color: #f4f7fb;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --bg-color: #111d2a;
+            --text-color: #ecf0f1;
+            --card-bg: #01070e;
+            --card-shadow: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Body Styling */
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.5s ease;
+        }
+
+        /* Chat Container */
+        .chat-container {
+    max-width: 700px;
+    margin: 60px auto;
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 6px 20px var(--card-shadow);
+    padding: 35px;
+    text-align: center;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    animation: floatEffect 5s infinite ease-in-out;
+}
+
+.chat-container:hover {
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes floatEffect {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+
+        .chat-container h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .chat-container p {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        .upload-label {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .img-preview {
+            width: 100%;
+            height: 300px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 20px;
+            border: 3px dashed #ddd;
+            border-radius: 12px;
+            transition: border-color 0.3s ease;
+        }
+
+        .img-preview:hover {
+            border-color: #3498db;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 50px;
+            height: 50px;
+            animation: spin 3s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* Animations */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Media Query for mobile devices */
+        @media (max-width: 768px) {
+            .title-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-btn {
+                margin: 10px 0;
+            }
+
+            .chat-container {
+                margin: 30px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Title Bar with Logout and Theme Toggle -->
+    <div class="title-bar">
+        <div>Traffic Signboard Instructor</div>
+        <button class="nav-btn" onclick="window.location.href='/index/'">Home</button>
+        <button class="nav-btn" onclick="window.location.href='/logout/'">Logout</button>
+        <select class="theme-toggle" id="theme-toggle" onchange="toggleTheme()">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+        </select>
+    </div>
+
+    <!-- Main Chat Container -->
+    <div class="chat-container">
+        <h2>Hi, {% if user.is_authenticated %}{{ user.username }}{% else %}Guest{% endif %}</h2>
+        <p>Please upload an image for assistance.<br>Image must be in JPEG or PNG format.</p>
+        
+        <form id="upload-file" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="imageUpload" class="upload-label">Upload an Image:</label>
+            <input type="file" name="file" id="imageUpload" accept=".png, .jpg, .jpeg">
+        </form>
+
+        <!-- Image preview and predict button -->
+        <div class="image-section" style="display:none;">
+            <div class="img-preview" id="imagePreview"></div>
+            <button type="button" class="btn-primary" id="btn-predict">Predict!</button>
+        </div>
+
+        <!-- Loader for predictions -->
+        <div class="loader" style="display:none;"></div>
+
+        <!-- Result Section -->
+        <h3 id="result"><span></span></h3>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function toggleTheme() {
+            const theme = document.getElementById("theme-toggle").value;
+            document.body.className = theme + "-theme";
+            localStorage.setItem("theme", theme);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.getElementById("theme-toggle").value = savedTheme;
+            document.body.className = savedTheme + "-theme";
+        });
+
+        $(document).ready(function () {
+            $("#imageUpload").change(function () {
+                const file = this.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $("#imagePreview").css("background-image", `url(${e.target.result})`);
+                        $(".image-section").show();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            $("#btn-predict").click(function () {
+                const formData = new FormData($("#upload-file")[0]);
+                $(".loader").show();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "predict" %}',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $(".loader").hide();
+                        $("#result").text(data.result);
+                    },
+                    error: function () {
+                        $(".loader").hide();
+                        alert("An error occurred. Please try again.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
